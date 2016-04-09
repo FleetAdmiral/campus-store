@@ -1,0 +1,38 @@
+{{extend 'layout.html'}}
+<h1>The most recent recipes are:</h1>
+{{i=0}}
+{{for page in lol:}}
+	{{if page is not None:}}
+		{{i=i+1}}
+		{{if i==5:}}
+			{{break}}
+		{{pass}}
+<a href="{{=URL('show',args=page.id)}}" >
+<div style="margin: 0;margin-top: 1.0em; margin-bottom: 1.0em; padding-bottom: 20em; padding-top: 10em; width: 100%; background-color: ##ffecef; border: 1px solid#000000">
+    <div style="display: inline; float: left;">
+        <div style="display: inline; float: left; padding-left: 4em;width: 30em;">
+            <h2 >{{=page.title}}</h2>
+            {{newla=db(page.created_by==db.auth_user.id).select(db.auth_user.first_name,db.auth_user.last_name)}}
+            {{for newl in newla:}}
+            <h4 style="float: right;">By {{=newl.first_name}} {{=newl.last_name}}</h4>
+            {{pass}}
+        </div>
+        <div style="display: inline;float: right;padding-left: 10em; width: 30em;"><h4>{{=page.body}}</h4></div>
+    </div>
+    <div style="display: inline;float: right;padding-right: 20em;">
+            <img src="{{=URL('download',args=page.image)}}" height=110 width=180 style="border: 2px solid #000000; border-radius: 0.5em;" />
+       
+        </div>
+    </div>
+</a>
+{{r=page.id}}
+{{pass}}
+{{pass}}
+{{if db().select(orderby=~db.page.id).last() is not None:}}
+{{go=db().select(orderby=~db.page.id).last().id}}
+{{if r!=go:}}
+<a href="{{=URL('index',args=r)}}">
+    <div style="text-align: right;">Next Page</div>
+</a>
+{{pass}}
+{{pass}}
